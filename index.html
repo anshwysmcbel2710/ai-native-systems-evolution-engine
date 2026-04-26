@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI-Native Systems Evolution | Bits & Brains AI</title>
+<meta name="description" content="Move from manual workflows to AI-native systems with event-driven architecture. Experience the evolution of intelligent infrastructure.">
+<meta property="og:title" content="AI-Native Systems Evolution | Bits & Brains AI">
+<meta property="og:description" content="From manual chaos to AI-native intelligence. See how modern systems evolve.">
+<meta property="og:type" content="website">
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:title" content="AI-Native Systems Evolution | Bits & Brains AI">
+<meta property="twitter:description" content="From manual chaos to AI-native intelligence.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Bits & Brains AI",
+  "description": "AI Infrastructure Company",
+  "serviceType": "AI-Native Systems Architecture"
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=JetBrains+Mono:wght@300;400&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #080706;
+    --manual: #FF3B30;
+    --event: #FF9500;
+    --ai: #D4A843;
+    --text: #F5EFE6;
+    --dim: rgba(245,239,230,0.35);
+  }
+  html, body {
+    width: 100%; height: 100%;
+    background: var(--bg);
+    overflow: hidden;
+    font-family: 'Syne', sans-serif;
+    color: var(--text);
+    cursor: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+  #canvas-bg { position: fixed; inset: 0; z-index: 0; }
+  #canvas-fx  { position: fixed; inset: 0; z-index: 2; pointer-events: none; }
+  main {
+    position: fixed; inset: 0; z-index: 3;
+    display: grid;
+    grid-template-rows: 1fr auto auto auto;
+    grid-template-columns: 1fr 1fr 1fr;
+    padding: 44px 48px 32px;
+    gap: 0;
+    pointer-events: none;
+  }
+  /* ── PANELS ── */
+  .panel {
+    display: flex; flex-direction: column; align-items: center;
+    opacity: 0; transform: translateY(24px) scale(0.97);
+    transition: opacity 0.7s cubic-bezier(.16,1,.3,1), transform 0.7s cubic-bezier(.16,1,.3,1);
+    position: relative;
+  }
+  #panel-manual {
+    align-items: flex-start;
+    padding-left: 8px;
+  }
+  #panel-ai {
+    align-items: flex-end;
+    padding-right: 8px;
+  }
+  .panel.visible { opacity: 1; transform: translateY(0) scale(1); }
+  .panel-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase;
+    margin-bottom: 16px; opacity: 0.45;
+  }
+  .panel-label.manual { color: var(--manual); align-self: flex-start; }
+  .panel-label.event  { color: var(--event); }
+  .panel-label.ai     { color: var(--ai); align-self: flex-end; }
+
+  /* Cards */
+  .cards { display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 240px; }
+  .card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 6px; padding: 10px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: var(--dim);
+    position: relative; overflow: hidden;
+    opacity: 0; transform: translateX(-16px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+  .card.visible { opacity: 1; transform: translateX(0); }
+  .card .card-title { font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 4px; opacity: 0.5; }
+  .card .card-error { color: var(--manual); font-size: 9px; margin-top: 6px; display: flex; align-items: center; gap: 4px; }
+  .card .card-error::before { content:''; width:5px; height:5px; border-radius:50%; background:var(--manual); display:inline-block; animation: pulse-red 1s infinite; }
+  .card.glitch { animation: glitch-card 0.08s infinite; }
+  @keyframes glitch-card {
+    0%   { transform: translateX(0); }
+    25%  { transform: translateX(-2px) skewX(-1deg); filter: hue-rotate(90deg); }
+    50%  { transform: translateX(2px) skewX(1deg); }
+    75%  { transform: translateX(-1px); filter: hue-rotate(-90deg); }
+    100% { transform: translateX(0); }
+  }
+  @keyframes pulse-red { 0%,100%{opacity:1;} 50%{opacity:0;} }
+
+  /* Event Bus */
+  .event-hub { display: flex; flex-direction: column; align-items: center; width: 100%; }
+  .hub-core {
+    width: 72px; height: 72px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,149,0,0.35) 0%, transparent 70%);
+    border: 1.5px solid rgba(255,149,0,0.6);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 8px; letter-spacing: 0.1em;
+    color: var(--event); text-align: center; line-height: 1.4;
+    position: relative; opacity: 0;
+    transition: opacity 0.5s ease;
+    box-shadow: 0 0 30px rgba(255,149,0,0.2), 0 0 60px rgba(255,149,0,0.1);
+  }
+  .hub-core.visible { opacity: 1; }
+  .hub-core::after {
+    content:''; position:absolute; inset:-8px; border-radius:50%;
+    border: 1px solid rgba(255,149,0,0.2);
+    animation: hub-ring 2s ease-in-out infinite;
+  }
+  @keyframes hub-ring { 0%,100%{transform:scale(1);opacity:0.4;} 50%{transform:scale(1.15);opacity:0.1;} }
+  .hub-spokes { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-top: 20px; width: 100%; max-width: 260px; }
+  .spoke {
+    background: rgba(255,149,0,0.04);
+    border: 1px solid rgba(255,149,0,0.15);
+    border-radius: 6px; padding: 8px 10px;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    color: rgba(255,149,0,0.7); text-align: center;
+    opacity: 0; transform: scale(0.8);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+  .spoke.visible { opacity: 1; transform: scale(1); }
+
+  /* AI Nodes */
+  .ai-cluster { display: flex; flex-direction: column; align-items: center; width: 100%; }
+  .ai-core {
+    width: 80px; height: 80px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(212,168,67,0.4) 0%, transparent 70%);
+    border: 1.5px solid rgba(212,168,67,0.7);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 8px;
+    color: var(--ai); text-align: center; line-height: 1.5;
+    opacity: 0; transition: opacity 0.6s ease;
+    box-shadow: 0 0 40px rgba(212,168,67,0.25), 0 0 80px rgba(212,168,67,0.1);
+    position: relative;
+  }
+  .ai-core.visible { opacity: 1; }
+  .ai-core::before {
+    content:''; position:absolute; inset:-12px; border-radius:50%;
+    border: 1px solid rgba(212,168,67,0.15);
+    animation: ai-breathe 3s ease-in-out infinite;
+  }
+  .ai-core::after {
+    content:''; position:absolute; inset:-24px; border-radius:50%;
+    border: 1px solid rgba(212,168,67,0.07);
+    animation: ai-breathe 3s ease-in-out infinite 1.5s;
+  }
+  @keyframes ai-breathe { 0%,100%{transform:scale(1);opacity:1;} 50%{transform:scale(1.1);opacity:0.4;} }
+  .ai-agents { display: grid; grid-template-columns: repeat(2,1fr); gap: 8px; margin-top: 20px; width: 100%; max-width: 220px; }
+  .agent {
+    background: rgba(212,168,67,0.04);
+    border: 1px solid rgba(212,168,67,0.15);
+    border-radius: 6px; padding: 8px 10px;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    color: rgba(212,168,67,0.7); text-align: center;
+    opacity: 0; transform: translateY(10px) scale(0.9);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+  .agent.visible { opacity: 1; transform: translateY(0) scale(1); }
+
+  /* ── HEADLINE ── */
+  .headline-row {
+    grid-column: 1 / -1; grid-row: 2;
+    display: flex; justify-content: center; align-items: center;
+    padding: 18px 0 14px;
+    opacity: 0; transition: opacity 0.8s ease;
+  }
+  .headline-row.visible { opacity: 1; }
+  .headline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(22px, 2.8vw, 40px);
+    font-weight: 300; letter-spacing: 0.04em;
+    color: rgba(245,239,230,0.85);
+    display: flex; align-items: center; gap: 0.5em; flex-wrap: wrap; justify-content: center;
+  }
+  .hl-manual  { color: var(--manual); transition: text-shadow 0.5s ease; }
+  .hl-event   { color: var(--event);  transition: text-shadow 0.5s ease; }
+  .hl-ai      { color: var(--ai);     transition: text-shadow 0.5s ease; }
+  .hl-manual.glow  { text-shadow: 0 0 20px rgba(255,59,48,0.7); }
+  .hl-event.glow   { text-shadow: 0 0 20px rgba(255,149,0,0.7); }
+  .hl-ai.glow      { text-shadow: 0 0 20px rgba(212,168,67,0.7); }
+  .arrow { color: rgba(245,239,230,0.3); font-style: normal; }
+
+  /* ── DESCRIPTORS ── */
+  .desc-row {
+    grid-column: 1 / -1; grid-row: 3;
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    padding: 0 0 20px;
+    opacity: 0; transition: opacity 0.8s ease;
+  }
+  .desc-row.visible { opacity: 1; }
+  .desc {
+    text-align: center; padding: 0 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.1em; line-height: 1.7;
+    opacity: 0.55;
+  }
+  .desc.manual { color: var(--manual); text-align: left; padding-left: 20px; }
+  .desc.event  { color: var(--event);  text-align: center; }
+  .desc.ai     { color: var(--ai);     text-align: right; padding-right: 20px; }
+
+  /* ── BRAND ── */
+  .brand {
+    grid-column: 1 / -1; grid-row: 4;
+    text-align: center;
+    padding: 16px 0 20px;
+    border-top: 1px solid rgba(212,168,67,0.12);
+    opacity: 0; transition: opacity 1.2s ease;
+  }
+  .brand.visible { opacity: 1; }
+  .brand-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(18px, 2.5vw, 28px);
+    font-weight: 600; letter-spacing: 0.18em;
+    color: var(--ai);
+    text-shadow: 0 0 30px rgba(212,168,67,0.4), 0 0 60px rgba(212,168,67,0.15);
+  }
+  .brand-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase;
+    color: rgba(212,168,67,0.5); margin-top: 4px;
+  }
+
+  /* ── CURSOR ── */
+  #cursor {
+    position: fixed; width: 8px; height: 8px; border-radius: 50%;
+    background: rgba(212,168,67,0.8); pointer-events: none;
+    z-index: 9999; transform: translate(-50%,-50%);
+    box-shadow: 0 0 12px rgba(212,168,67,0.6);
+    transition: width 0.2s, height 0.2s;
+  }
+  #cursor-ring {
+    position: fixed; width: 28px; height: 28px; border-radius: 50%;
+    border: 1px solid rgba(212,168,67,0.3); pointer-events: none;
+    z-index: 9998; transform: translate(-50%,-50%);
+    transition: transform 0.12s ease, width 0.2s, height 0.2s;
+  }
+
+  /* ── INIT OVERLAY ── */
+  #init-line {
+    position: fixed; left: 50%; top: 50%; transform: translate(-50%,-50%);
+    width: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(245,239,230,0.15), transparent);
+    z-index: 4;
+    transition: width 1.2s cubic-bezier(0.16,1,0.3,1);
+  }
+  #init-line.expand { width: 100vw; }
+  #grid-overlay {
+    position: fixed; inset: 0; z-index: 1;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 80px 80px;
+    opacity: 0; transition: opacity 1.5s ease;
+  }
+  #grid-overlay.visible { opacity: 1; }
+</style>
+</head>
+<body aria-label="AI Systems Evolution — Bits and Brains AI">
+
+<canvas id="canvas-bg" aria-hidden="true"></canvas>
+<canvas id="canvas-fx"  aria-hidden="true"></canvas>
+<div id="grid-overlay" aria-hidden="true"></div>
+<div id="init-line"    aria-hidden="true"></div>
+<div id="cursor"       aria-hidden="true"></div>
+<div id="cursor-ring"  aria-hidden="true"></div>
+
+<main role="main" aria-label="System evolution visualization">
+  <!-- LEFT: MANUAL -->
+  <section class="panel" id="panel-manual" aria-label="Manual systems — slow, error-prone">
+    <div class="panel-label manual">Manual</div>
+    <div class="cards" id="cards-manual">
+      <div class="card" id="card-spreadsheet">
+        <div class="card-title">Spreadsheet</div>
+        <div style="opacity:0.4;font-size:9px;">ROW 247 — Pending review</div>
+        <div class="card-error">Manual Process</div>
+      </div>
+      <div class="card" id="card-email">
+        <div class="card-title">Email</div>
+        <div style="opacity:0.4;font-size:9px;">Re: Re: Re: Q3 Report</div>
+        <div class="card-error">Not Delivered</div>
+      </div>
+      <div class="card" id="card-crm">
+        <div class="card-title">CRM</div>
+        <div style="opacity:0.4;font-size:9px;">Last sync: 3 days ago</div>
+        <div class="card-error">Timeout</div>
+      </div>
+      <div class="card" id="card-chat">
+        <div class="card-title">Chat</div>
+        <div style="opacity:0.4;font-size:9px;">"Who has the latest file?"</div>
+        <div class="card-error">No Response</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CENTER: EVENT-DRIVEN -->
+  <section class="panel" id="panel-event" aria-label="Event-driven architecture — structured and connected">
+    <div class="panel-label event">Event-Driven</div>
+    <div class="event-hub">
+      <div class="hub-core" id="hub-core">EVENT<br>BUS</div>
+      <div class="hub-spokes" id="hub-spokes">
+        <div class="spoke" id="spoke-api">API</div>
+        <div class="spoke" id="spoke-crm">CRM</div>
+        <div class="spoke" id="spoke-db">DB</div>
+        <div class="spoke" id="spoke-notif">Notif</div>
+        <div class="spoke" id="spoke-analytics">Stats</div>
+        <div class="spoke" id="spoke-queue">Queue</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RIGHT: AI-NATIVE -->
+  <section class="panel" id="panel-ai" aria-label="AI-native systems — autonomous and intelligent">
+    <div class="panel-label ai">AI-Native</div>
+    <div class="ai-cluster">
+      <div class="ai-core" id="ai-core">AI<br>ENGINE</div>
+      <div class="ai-agents" id="ai-agents">
+        <div class="agent" id="agent-rag">RAG<br>Pipeline</div>
+        <div class="agent" id="agent-dec">Decision<br>Optimizer</div>
+        <div class="agent" id="agent-mem">Memory<br>Layer</div>
+        <div class="agent" id="agent-auto">Autonomous<br>Agents</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HEADLINE -->
+  <div class="headline-row" id="headline-row">
+    <h1 class="headline">
+      From <em class="hl-manual" id="hl-manual">manual</em>
+      <span class="arrow">→</span>
+      <em class="hl-event" id="hl-event">event-driven</em>
+      <span class="arrow">→</span>
+      <em class="hl-ai" id="hl-ai">AI-native</em>
+    </h1>
+  </div>
+
+  <!-- DESCRIPTORS -->
+  <div class="desc-row" id="desc-row">
+    <div class="desc manual">Slow. Error-prone.<br>Hard to scale.</div>
+    <div class="desc event">Faster. Reliable.<br>Built for scale.</div>
+    <div class="desc ai">Autonomous. Intelligent.<br>Future-ready.</div>
+  </div>
+
+  <!-- BRAND -->
+  <div class="brand" id="brand" aria-label="Bits and Brains AI — AI Infrastructure Company">
+    <div class="brand-name">BITS &amp; BRAINS AI</div>
+    <div class="brand-sub">AI Infrastructure Company</div>
+  </div>
+</main>
+
+<script>
+(function(){
+'use strict';
+
+/* ── CANVAS SETUP ── */
+const bgC  = document.getElementById('canvas-bg');
+const fxC  = document.getElementById('canvas-fx');
+const bgX  = bgC.getContext('2d');
+const fxX  = fxC.getContext('2d');
+let W, H;
+function resize(){
+  W = bgC.width = fxC.width = window.innerWidth;
+  H = bgC.height = fxC.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+/* ── MOUSE ── */
+let mx = W/2, my = H/2;
+let tx = W/2, ty = H/2;
+const cursor     = document.getElementById('cursor');
+const cursorRing = document.getElementById('cursor-ring');
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.left = mx+'px'; cursor.style.top = my+'px';
+  cursorRing.style.left = mx+'px'; cursorRing.style.top = my+'px';
+});
+
+/* ── PARTICLES ── */
+const PARTICLES = [];
+const P_COUNT = 90;
+for(let i=0;i<P_COUNT;i++){
+  PARTICLES.push({
+    x: Math.random()*2000-500, y: Math.random()*1200-200,
+    vx: (Math.random()-0.5)*0.25, vy: (Math.random()-0.5)*0.18,
+    r: Math.random()*1.4+0.3,
+    a: Math.random()*0.4+0.05,
+    phase: Math.random()*Math.PI*2,
+    col: Math.random()<0.33 ? [255,59,48] : Math.random()<0.5 ? [255,149,0] : [212,168,67]
+  });
+}
+
+/* ── ENERGY PULSES ── */
+const PULSES = [];
+function spawnPulse(t){
+  if(t > 3000){
+    PULSES.push({ x: W*0.5, y: H*0.5, progress: 0, dir: 1, speed: 0.018, col:[255,149,0] });
+  }
+  if(t > 5500){
+    PULSES.push({ x: W*0.5, y: H*0.5, progress: 0, dir: 2, speed: 0.015, col:[212,168,67] });
+  }
+}
+
+/* ── NODE CONNECTIONS ── */
+const CONNECTIONS = [];
+const leftNodes  = [];
+const centerNodes = [];
+const rightNodes  = [];
+
+/* ── TIMELINE ENGINE ── */
+let startTime = null;
+let glitchActive = false;
+let glitchTimer = 0;
+
+function ease(t){ return t<0.5 ? 2*t*t : -1+(4-2*t)*t; }
+function lerp(a,b,t){ return a+(b-a)*t; }
+function clamp(v,a,b){ return Math.max(a,Math.min(b,v)); }
+function tNorm(t,start,end){ return clamp((t-start)/(end-start),0,1); }
+
+/* ── SHOW ── */
+function show(id, delay){
+  setTimeout(()=>{
+    const el = document.getElementById(id);
+    if(el) el.classList.add('visible');
+  }, delay);
+}
+function showClass(cls, delay){
+  setTimeout(()=>{
+    document.querySelectorAll('.'+cls).forEach(el=>el.classList.add('visible'));
+  }, delay);
+}
+
+/* ── GLITCH ── */
+function applyGlitch(active){
+  const cards = document.querySelectorAll('.card');
+  cards.forEach(c=>{
+    if(active && Math.random()<0.3) c.classList.add('glitch');
+    else c.classList.remove('glitch');
+  });
+}
+
+/* ── TIMELINE TRIGGERS ── */
+function triggerTimeline(){
+  // 0–1s: init
+  setTimeout(()=>{ document.getElementById('grid-overlay').classList.add('visible'); }, 100);
+  setTimeout(()=>{ document.getElementById('init-line').classList.add('expand'); }, 200);
+
+  // 1–3s: manual
+  show('panel-manual', 1000);
+  setTimeout(()=>{ document.getElementById('card-spreadsheet').classList.add('visible'); }, 1300);
+  setTimeout(()=>{ document.getElementById('card-email').classList.add('visible'); }, 1600);
+  setTimeout(()=>{ document.getElementById('card-crm').classList.add('visible'); }, 1900);
+  setTimeout(()=>{ document.getElementById('card-chat').classList.add('visible'); }, 2200);
+  setTimeout(()=>{ glitchActive = true; }, 1500);
+  setTimeout(()=>{ glitchActive = false; }, 3000);
+
+  // 3–5s: event-driven
+  show('panel-event', 3000);
+  show('hub-core', 3400);
+  setTimeout(()=>{ ['spoke-api','spoke-crm','spoke-db','spoke-notif','spoke-analytics','spoke-queue'].forEach((id,i)=>{ show(id, i*120); }); }, 3700);
+
+  // 5–7s: AI-native
+  show('panel-ai', 5000);
+  show('ai-core', 5400);
+  setTimeout(()=>{ ['agent-rag','agent-dec','agent-mem','agent-auto'].forEach((id,i)=>{ show(id, i*150); }); }, 5800);
+
+  // 6–8s: headline
+  show('headline-row', 6000);
+  setTimeout(()=>{ document.getElementById('hl-manual').classList.add('glow'); }, 6400);
+  setTimeout(()=>{ document.getElementById('hl-manual').classList.remove('glow'); document.getElementById('hl-event').classList.add('glow'); }, 7200);
+  setTimeout(()=>{ document.getElementById('hl-event').classList.remove('glow');  document.getElementById('hl-ai').classList.add('glow'); }, 8000);
+
+  // 7–9s: descriptors
+  show('desc-row', 7200);
+
+  // 9–10s: brand
+  show('brand', 9000);
+}
+
+/* ── RED GLOW PULSES (canvas overlay for left) ── */
+let redGlowIntensity = 0;
+
+/* ── DRAW ENERGY FLOW ── */
+function drawEnergyLine(t){
+  if(t < 3000) return;
+  const alpha = clamp(tNorm(t,3000,4000),0,1) * 0.6;
+  const lx = W*0.33, rx = W*0.67, cy = H*0.42;
+
+  // left→center beam
+  const grad1 = bgX.createLinearGradient(W*0.15, cy, lx, cy);
+  grad1.addColorStop(0, 'transparent');
+  grad1.addColorStop(1, `rgba(255,149,0,${alpha*0.5})`);
+  bgX.beginPath(); bgX.moveTo(W*0.15,cy); bgX.lineTo(lx,cy);
+  bgX.strokeStyle = grad1; bgX.lineWidth = 1; bgX.stroke();
+
+  if(t < 5000) return;
+  const alpha2 = clamp(tNorm(t,5000,6000),0,1) * 0.6;
+  // center→right beam
+  const grad2 = bgX.createLinearGradient(rx, cy, W*0.85, cy);
+  grad2.addColorStop(0, `rgba(212,168,67,${alpha2*0.5})`);
+  grad2.addColorStop(1, 'transparent');
+  bgX.beginPath(); bgX.moveTo(rx,cy); bgX.lineTo(W*0.85,cy);
+  bgX.strokeStyle = grad2; bgX.lineWidth = 1; bgX.stroke();
+}
+
+/* ── DRAW PULSES ── */
+function drawPulses(){
+  PULSES.forEach((p,i)=>{
+    p.progress += p.speed;
+    const cx = W*0.5, cy = H*0.42;
+    let sx, ex;
+    if(p.dir===1){ sx=cx; ex=W*0.12; } else { sx=cx; ex=W*0.88; }
+    const px = lerp(sx,ex,p.progress);
+    const col = p.col;
+    bgX.beginPath();
+    bgX.arc(px, cy, 3, 0, Math.PI*2);
+    bgX.fillStyle = `rgba(${col[0]},${col[1]},${col[2]},${1-p.progress})`;
+    bgX.fill();
+    // trail
+    bgX.beginPath();
+    const trail = lerp(sx,ex,Math.max(0,p.progress-0.15));
+    bgX.moveTo(trail,cy); bgX.lineTo(px,cy);
+    bgX.strokeStyle = `rgba(${col[0]},${col[1]},${col[2]},${(1-p.progress)*0.4})`;
+    bgX.lineWidth = 1.5; bgX.stroke();
+  });
+  for(let i=PULSES.length-1;i>=0;i--){
+    if(PULSES[i].progress>=1) PULSES.splice(i,1);
+  }
+}
+
+/* ── RED GLOW ── */
+function drawRedGlow(t, dt){
+  if(t < 1000 || t > 3200) { redGlowIntensity = Math.max(0, redGlowIntensity-0.02); return; }
+  redGlowIntensity = Math.min(1, redGlowIntensity + 0.03);
+  const lx = W*0.16, cy = H*0.42;
+  const gi = redGlowIntensity * (0.5 + 0.5*Math.sin(t*0.005));
+  const grd = bgX.createRadialGradient(lx,cy,0,lx,cy,200);
+  grd.addColorStop(0, `rgba(255,59,48,${gi*0.12})`);
+  grd.addColorStop(1, 'transparent');
+  bgX.fillStyle = grd; bgX.fillRect(0,0,W,H);
+}
+
+/* ── AI GLOW ── */
+function drawAIGlow(t){
+  if(t < 5000) return;
+  const alpha = clamp(tNorm(t,5000,6500),0,1);
+  const rx = W*0.84, cy = H*0.42;
+  const pulse = 0.6 + 0.4*Math.sin(t*0.003);
+  const grd = bgX.createRadialGradient(rx,cy,0,rx,cy,250);
+  grd.addColorStop(0, `rgba(212,168,67,${alpha*0.15*pulse})`);
+  grd.addColorStop(1, 'transparent');
+  bgX.fillStyle = grd; bgX.fillRect(0,0,W,H);
+}
+
+/* ── EVENT GLOW ── */
+function drawEventGlow(t){
+  if(t < 3000 || t > 5500) return;
+  const alpha = clamp(tNorm(t,3000,4200),0,1) * clamp(1-tNorm(t,5000,5500),0,1);
+  const cx = W*0.5, cy = H*0.42;
+  const pulse = 0.7 + 0.3*Math.sin(t*0.004);
+  const grd = bgX.createRadialGradient(cx,cy,0,cx,cy,220);
+  grd.addColorStop(0, `rgba(255,149,0,${alpha*0.18*pulse})`);
+  grd.addColorStop(1, 'transparent');
+  bgX.fillStyle = grd; bgX.fillRect(0,0,W,H);
+}
+
+/* ── NOISE GRAIN OVERLAY ── */
+function drawGrain(){
+  const imageData = fxX.createImageData(W, H);
+  const d = imageData.data;
+  for(let i=0;i<d.length;i+=4){
+    const v = Math.random()*8;
+    d[i]=d[i+1]=d[i+2]=v; d[i+3]=18;
+  }
+  fxX.putImageData(imageData, 0, 0);
+}
+
+/* ── DRAW CONNECTIONS ── */
+function drawConnections(t){
+  if(t < 3000) return;
+  const evAlpha = clamp(tNorm(t,3200,4500),0,1);
+  const cx = W*0.5, cy = H*0.42;
+  const spokes = [
+    {x:W*0.38,y:cy-80}, {x:W*0.62,y:cy-80},
+    {x:W*0.35,y:cy+60}, {x:W*0.65,y:cy+60},
+    {x:W*0.42,y:cy+110},{x:W*0.58,y:cy+110}
+  ];
+  spokes.forEach((s,i)=>{
+    const pulse = 0.3 + 0.7*((Math.sin(t*0.003 + i*1.1)+1)/2);
+    bgX.beginPath();
+    bgX.moveTo(cx,cy); bgX.lineTo(s.x,s.y);
+    bgX.strokeStyle = `rgba(255,149,0,${evAlpha*0.25*pulse})`;
+    bgX.lineWidth = 0.8; bgX.stroke();
+  });
+
+  if(t < 5000) return;
+  const aiAlpha = clamp(tNorm(t,5200,6500),0,1);
+  const rx = W*0.84;
+  const agents = [
+    {x:rx-60,y:cy-70},{x:rx+60,y:cy-70},
+    {x:rx-70,y:cy+50},{x:rx+70,y:cy+50}
+  ];
+  agents.forEach((a,i)=>{
+    const pulse = 0.4+0.6*((Math.sin(t*0.002+i*0.9)+1)/2);
+    bgX.beginPath();
+    bgX.moveTo(rx,cy); bgX.lineTo(a.x,a.y);
+    bgX.strokeStyle = `rgba(212,168,67,${aiAlpha*0.3*pulse})`;
+    bgX.lineWidth = 0.8; bgX.stroke();
+    // agent→agent
+    if(i<agents.length-1){
+      bgX.beginPath();
+      bgX.moveTo(a.x,a.y); bgX.lineTo(agents[(i+1)%agents.length].x,agents[(i+1)%agents.length].y);
+      bgX.strokeStyle = `rgba(212,168,67,${aiAlpha*0.1*pulse})`;
+      bgX.lineWidth = 0.5; bgX.stroke();
+    }
+  });
+}
+
+/* ── GLITCH FX ── */
+let glitchFrame = 0;
+function drawGlitchFX(t){
+  if(!glitchActive) return;
+  if(Math.random()>0.12) return;
+  const y = Math.random()*H*0.7;
+  const h = Math.random()*4+1;
+  const slice = fxX.getImageData(0,y,W*0.35,h);
+  const off = (Math.random()-0.5)*20;
+  fxX.putImageData(slice,off,y);
+  // rgb shift
+  fxX.fillStyle = `rgba(255,59,48,${Math.random()*0.04})`;
+  fxX.fillRect(0,y,W*0.35,h);
+}
+
+/* ── PULSE SPAWNER ── */
+let lastPulseTime = 0;
+function maybePulse(t){
+  if(t-lastPulseTime > 800){
+    spawnPulse(t);
+    lastPulseTime = t;
+  }
+}
+
+/* ── PARALLAX ── */
+function applyParallax(){
+  const dx = (mx-W/2)/(W/2);
+  const dy = (my-H/2)/(H/2);
+  tx = lerp(tx, mx, 0.08);
+  ty = lerp(ty, my, 0.08);
+  document.querySelector('main').style.transform =
+    `translate(${dx*-8}px,${dy*-5}px)`;
+}
+
+/* ── MAIN LOOP ── */
+let frameCount = 0;
+function loop(ts){
+  if(!startTime) startTime = ts;
+  const t = ts - startTime;
+  const dt = 16;
+
+  bgX.clearRect(0,0,W,H);
+  fxX.clearRect(0,0,W,H);
+
+  // Background
+  bgX.fillStyle = '#080706';
+  bgX.fillRect(0,0,W,H);
+
+  // Glows
+  drawRedGlow(t, dt);
+  drawEventGlow(t);
+  drawAIGlow(t);
+
+  // Connections
+  drawConnections(t);
+
+  // Energy line
+  drawEnergyLine(t);
+
+  // Pulses
+  maybePulse(t);
+  drawPulses();
+
+  // Particles
+  const pAlpha = clamp(tNorm(t,200,1200),0,1);
+  PARTICLES.forEach(p=>{
+    p.x += p.vx + (mx-W/2)*0.00006;
+    p.y += p.vy + (my-H/2)*0.00004;
+    if(p.x<-200) p.x=W+200;
+    if(p.x>W+200) p.x=-200;
+    if(p.y<-200) p.y=H+200;
+    if(p.y>H+200) p.y=-200;
+    const flicker = 0.5+0.5*Math.sin(t*0.001+p.phase);
+    const [r,g,b] = p.col;
+    bgX.beginPath();
+    bgX.arc(p.x,p.y,p.r,0,Math.PI*2);
+    bgX.fillStyle = `rgba(${r},${g},${b},${p.a*pAlpha*flicker})`;
+    bgX.fill();
+  });
+
+  // Glitch fx
+  if(glitchActive){
+    drawGlitchFX(t);
+    glitchTimer++;
+    if(glitchTimer%6===0) applyGlitch(true);
+    else if(glitchTimer%6===3) applyGlitch(false);
+  }
+
+  // Grain (every 2 frames)
+  if(frameCount%2===0) drawGrain();
+
+  // Parallax
+  applyParallax();
+
+  // Cursor ring smooth
+  cursorRing.style.left = lerp(parseFloat(cursorRing.style.left||W/2),mx,0.1)+'px';
+  cursorRing.style.top  = lerp(parseFloat(cursorRing.style.top||H/2), my,0.1)+'px';
+
+  frameCount++;
+  requestAnimationFrame(loop);
+}
+
+// Boot
+triggerTimeline();
+requestAnimationFrame(loop);
+
+})();
+</script>
+</body>
+</html>
